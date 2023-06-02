@@ -45,6 +45,8 @@
 
 
     <script>
+        let renderSpeed = 300;
+
         function renderText(textArea, text, renderSpeed) {
             const words = text.split(' ');
             let index = 0;
@@ -91,7 +93,6 @@
             startButton.classList.add('hidden')
 
             const text = inputTextArea.value;
-            const renderSpeed = 250;
             outputTextArea.innerHTML = '';
             renderText(outputTextArea, text, renderSpeed);
         }
