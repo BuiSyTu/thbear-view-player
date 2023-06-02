@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THBear-view-player</title>
+
+
+    <style>
+        textarea {
+            margin: 10px 600px;
+            width: calc(100% - 1200px);
+            min-height: 750px;
+            padding: 24px 32px;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 16px;
+        }
+
+
+        button {
+            display: block;
+            padding: 12px 24px;
+            margin: 16px auto 0;
+            font-size: 18px;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <textarea id="input" spellcheck="false"></textarea>
+    <textarea id="output" class="hidden" spellcheck="false"></textarea>
+    <button id="start" onclick="startRendering()">Bắt đầu đọc</button>
+    <button id="back" onclick="back()" class="hidden">Quay lại</button>
+
+
+    <script>
+        function renderText(textArea, text, renderSpeed) {
+            const words = text.split(' ');
+            let index = 0;
+            const intervalId = setInterval(() => {
+                textArea.value += words[index] + ' ';
+                textArea.scrollTop = textArea.scrollHeight; // Auto scroll to the bottom
+                const lastWord = textArea.value.split(' ').pop();
+                const newLastWord = `<span class="highlight">${lastWord}</span>`;
+                textArea.innerHTML = textArea.innerHTML.replace(lastWord, newLastWord);
+                setTimeout(() => {
+                    textArea.innerHTML = textArea.innerHTML.replace(newLastWord, lastWord);
+                }, renderSpeed / 2);
+                index++;
+                if (index >= words.length) {
+                    clearInterval(intervalId);
+                    const backButton = document.getElementById('back');
+                    backButton.classList.remove('hidden')
+                }
+            }, renderSpeed);
+        }
+
+        function back() {
+            const inputTextArea = document.getElementById('input');
+            const outputTextArea = document.getElementById('output');
+            const startButton = document.getElementById('start');
+            const backButton = document.getElementById('back');
+
+            inputTextArea.classList.remove('hidden')
+            outputTextArea.classList.add('hidden')
+            startButton.classList.remove('hidden')
+            backButton.classList.add('hidden')
+
+            inputTextArea.value = ''
+            outputTextArea.value = ''
+        }
+
+        function startRendering() {
+            const inputTextArea = document.getElementById('input');
+            const outputTextArea = document.getElementById('output');
+            const startButton = document.getElementById('start');
+
+            inputTextArea.classList.add('hidden');
+            outputTextArea.classList.remove('hidden');
+            startButton.classList.add('hidden')
+
+            const text = inputTextArea.value;
+            const renderSpeed = 250;
+            outputTextArea.innerHTML = '';
+            renderText(outputTextArea, text, renderSpeed);
+        }
+    </script>
+</body>
+
+</html>
